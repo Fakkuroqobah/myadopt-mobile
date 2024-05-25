@@ -1,0 +1,33 @@
+name: anabul
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.3.4 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.2
+  dio: ^5.4.3+1
+  shared_preferences: ^2.2.3
+  google_fonts: ^6.2.1
+  iconsax: ^0.0.8
+  image_picker: ^1.1.1
+  awesome_snackbar_content: ^0.1.3
+  url_launcher: ^6.2.6
+  dartz: ^0.10.1
+  http_parser: ^4.0.2
+  path: ^1.9.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - google_fonts/
+    - assets/img/
