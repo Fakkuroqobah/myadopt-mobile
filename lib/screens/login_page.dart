@@ -121,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                               context,
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      const BottomPage()));
+                                      const BottomPage(initialTabIndex: 0)));
                         }).catchError((err) {
                           loadingProvider.setLoading(false);
                           final snackBar = SnackBar(
@@ -151,10 +151,10 @@ class _LoginPageState extends State<LoginPage> {
                               BorderRadius.circular(15.0), // Border radius 15
                         ),
                       ),
-                      child: const Padding(
-                        padding: EdgeInsets.all(15.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
                         child: Text(
-                          'Masuk',
+                          loadingProvider.isLoading ? 'Loading...' : 'Masuk',
                           textAlign: TextAlign.center, // Teks diatur ke tengah
                         ),
                       ),

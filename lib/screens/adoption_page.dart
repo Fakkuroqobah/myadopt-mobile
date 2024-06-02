@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
 
 import '../configs/constant.dart';
+import '../models/adopsi_model.dart';
+import '../providers/adopsi_provider.dart';
 
 class AdoptionPage extends StatefulWidget {
   const AdoptionPage({super.key});
@@ -11,6 +14,21 @@ class AdoptionPage extends StatefulWidget {
 }
 
 class _AdoptionPageState extends State<AdoptionPage> {
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
+
+  Future<void> _refresh() async {
+    Provider.of<AdopsiProvider>(context, listen: false).getData();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AdopsiProvider>(context, listen: false).getData();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,70 +37,75 @@ class _AdoptionPageState extends State<AdoptionPage> {
         title: const Text('Adopsi'),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 3,
-                    blurRadius: 7,
-                    offset: const Offset(0, 3),
+      body: RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: _refresh,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 3,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                    hintText: 'Search...',
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    prefixIcon:
+                        const Icon(Iconsax.heart_search, color: Colors.grey),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
                   ),
-                ],
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-                  hintText: 'Search...',
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  prefixIcon:
-                      const Icon(Iconsax.heart_search, color: Colors.grey),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
                 ),
               ),
-            ),
-            const SizedBox(height: 16.0),
-            Expanded(
-              child: ListView(
-                children: const [
-                  AdoptionCard(
-                    name: 'Willo adalah willie',
-                    breed: 'Persia',
-                    age: '2 tahun',
-                    weight: '2 kg',
-                    imageUrl: 'https://via.placeholder.com/150',
-                    status: 'ditolak',
-                  ),
-                  AdoptionCard(
-                    name: 'Willo adalah willie',
-                    breed: 'Persia',
-                    age: '2 tahun',
-                    weight: '2 kg',
-                    imageUrl: 'https://via.placeholder.com/150',
-                    status: 'diterima',
-                  ),
-                  AdoptionCard(
-                    name: 'Willo adalah willie',
-                    breed: 'Persia',
-                    age: '2 tahun',
-                    weight: '2 kg',
-                    imageUrl: 'https://via.placeholder.com/150',
-                    status: 'diproses',
-                  ),
-                ],
+              const SizedBox(height: 16.0),
+              Expanded(
+                child: Consumer<AdopsiProvider>(builder: (_, data, __) {
+                  if (data.isLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (data.hasError) {
+                    return const Center(
+                        child: Text("Terjadi kesalahan pada server"));
+                  }
+
+                  if (data.dataList.isEmpty) {
+                    return const Center(
+                        child: Text("Kamu belum memiliki hewan adopsi"));
+                  }
+
+                  List<Widget> cards = [];
+                  for (AdopsiModel card in data.dataList) {
+                    cards.add(AdoptionCard(
+                      name: card.nama,
+                      breed: card.ras,
+                      age: "${card.umur} Bulan",
+                      weight: "${card.berat} Kg",
+                      imageUrl: card.foto,
+                      status: card.status,
+                    ));
+                  }
+
+                  return ListView(children: cards);
+                }),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -137,7 +160,6 @@ class AdoptionCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const SizedBox(width: 16.0),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -166,25 +188,30 @@ class AdoptionCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 10.0),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  foregroundColor: Colors.white,
-                  backgroundColor: getStatusColor(status),
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(15.0), // Border radius 15
+              Row(
+                children: [
+                  const SizedBox(width: 16.0),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      foregroundColor: Colors.white,
+                      backgroundColor: getStatusColor(status),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(15.0), // Border radius 15
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0, vertical: 0.0),
+                      child: Text(
+                        status,
+                        textAlign: TextAlign.center, // Teks diatur ke tengah
+                      ),
+                    ),
                   ),
-                ),
-                child: const Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
-                  child: Text(
-                    'Simpan',
-                    textAlign: TextAlign.center, // Teks diatur ke tengah
-                  ),
-                ),
+                ],
               )
             ],
           )
@@ -197,9 +224,9 @@ class AdoptionCard extends StatelessWidget {
     switch (status) {
       case 'ditolak':
         return Colors.red;
-      case 'diterima':
+      case 'disetujui':
         return Colors.green;
-      case 'diproses':
+      case 'menunggu':
         return Colors.orange;
       default:
         return Colors.grey;
@@ -210,9 +237,9 @@ class AdoptionCard extends StatelessWidget {
     switch (status) {
       case 'ditolak':
         return 'Pengajuan ditolak';
-      case 'diterima':
+      case 'disetujui':
         return 'Pengajuan diterima';
-      case 'diproses':
+      case 'menunggu':
         return 'Pengajuan diproses';
       default:
         return 'Status tidak diketahui';

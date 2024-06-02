@@ -23,6 +23,7 @@ class LoginService {
     preferences.setString("alamat", loginModel.data.alamat);
     preferences.setString("no_telepon", loginModel.data.noTelepon);
     preferences.setString("username", loginModel.data.username);
+    preferences.setString("foto", loginModel.data.foto);
 
     return true;
   }

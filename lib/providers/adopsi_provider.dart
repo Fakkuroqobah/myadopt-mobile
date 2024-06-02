@@ -1,15 +1,15 @@
-import 'package:anabul/models/hewan_model.dart';
+import 'package:anabul/models/adopsi_model.dart';
 import 'package:flutter/material.dart';
 
-import '../services/hewan_service.dart';
+import '../services/adopsi_service.dart';
 
-class HewanProvider extends ChangeNotifier {
-  List<HewanModel> _dataList = [];
+class AdopsiProvider extends ChangeNotifier {
+  List<AdopsiModel> _dataList = [];
 
   bool _isLoading = false;
   bool _hasError = false;
 
-  List<HewanModel> get dataList => _dataList;
+  List<AdopsiModel> get dataList => _dataList;
 
   bool get isLoading => _isLoading;
   bool get hasError => _hasError;
@@ -19,8 +19,8 @@ class HewanProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      HewanService dataService = HewanService();
-      _dataList = await dataService.getHewan();
+      AdopsiService dataService = AdopsiService();
+      _dataList = await dataService.getAdopsi();
 
       _hasError = false;
     } catch (_) {

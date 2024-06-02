@@ -1,8 +1,9 @@
-import 'package:anabul/configs/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../configs/constant.dart';
 import '../models/hewan_model.dart';
 import '../providers/hewan_provider.dart';
 import 'detail_page.dart';
@@ -21,6 +22,19 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<HewanProvider>(context, listen: false).getData();
     });
+
+    _loadUser();
+  }
+
+  String _nama = "";
+  String _foto = "";
+
+  Future<void> _loadUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _nama = prefs.getString('nama') ?? '';
+      _foto = prefs.getString('foto') ?? '';
+    });
   }
 
   @override
@@ -34,23 +48,22 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 const SizedBox(height: 12.0),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Hello,",
+                        const Text("Hello,",
                             style: TextStyle(
                                 fontWeight: FontWeight.w300, fontSize: 12.0)),
-                        Text("Agung Maulana",
-                            style: TextStyle(
+                        Text(_nama,
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w700, fontSize: 18.0)),
                       ],
                     ),
                     CircleAvatar(
-                      backgroundImage:
-                          AssetImage("${Constant.assetUrl}avatar.png"),
+                      backgroundImage: NetworkImage(_foto),
                     ),
                   ],
                 ),
@@ -92,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                       top: 50,
                       left: 30,
                       child: Text(
-                        "Save a life Adopt!\nDon’t Buy!!!",
+                        "Save a life Adopt!\nDon't Buy!!!",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,

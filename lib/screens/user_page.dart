@@ -50,6 +50,8 @@ class _UserPageState extends State<UserPage> {
     _loadData();
   }
 
+  String _foto = '';
+
   Future<void> _loadData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -59,6 +61,7 @@ class _UserPageState extends State<UserPage> {
       txtAlamat.text = prefs.getString('alamat') ?? '';
       txtNoTelepon.text = prefs.getString('no_telepon') ?? '';
       txtUsername.text = prefs.getString('username') ?? '';
+      _foto = prefs.getString('foto') ?? '';
     });
   }
 
@@ -84,8 +87,7 @@ class _UserPageState extends State<UserPage> {
                         radius: 50,
                         backgroundImage: _imageFile != null
                             ? FileImage(_imageFile!)
-                            : const AssetImage("${Constant.assetUrl}avatar.png")
-                                as ImageProvider,
+                            : NetworkImage(_foto) as ImageProvider,
                       ),
                       // Edit Icon
                       Positioned(
@@ -220,6 +222,7 @@ class _UserPageState extends State<UserPage> {
                       onPressed: () async {
                         data.setLoading(true);
 
+                        int id = int.parse(txtId.text);
                         String nama = txtNama.text;
                         String jenisKelamin = _jenisKelamin ?? "";
                         String alamat = txtAlamat.text;
@@ -254,14 +257,20 @@ class _UserPageState extends State<UserPage> {
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         } else {
-                          final Uint8List fileBytes =
-                              await _imageFile!.readAsBytes();
-                          final String fileExtension = path
-                              .extension(_imageFile!.path)
-                              .replaceFirst('.', '');
+                          final Uint8List fileBytes;
+                          final String fileExtension;
+                          if (_imageFile != null) {
+                            fileBytes = await _imageFile!.readAsBytes();
+                            fileExtension = path
+                                .extension(_imageFile!.path)
+                                .replaceFirst('.', '');
+                          } else {
+                            fileBytes = Uint8List(0);
+                            fileExtension = 'unknown';
+                          }
 
                           _userService
-                              .add(nama, jenisKelamin, alamat, noTelepon,
+                              .add(id, nama, jenisKelamin, alamat, noTelepon,
                                   fileBytes, fileExtension)
                               .then((value) {
                             data.setLoading(false);
@@ -281,14 +290,14 @@ class _UserPageState extends State<UserPage> {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
 
-                                Navigator.pop(context);
                                 return null;
                               },
                             );
                           }).catchError((err) {
                             data.setLoading(false);
                             SnackBar snackBar = const SnackBar(
-                              content: Text("Terjadi kesalahan"),
+                              content:
+                                  Text("Terjadi kesalahan, hubungi developer"),
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);

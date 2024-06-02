@@ -169,7 +169,8 @@ class _DetailPageState extends State<DetailPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const SubmitAdoptionPage(),
+                            builder: (context) =>
+                                SubmitAdoptionPage(data: widget.data),
                           ),
                         );
                       },

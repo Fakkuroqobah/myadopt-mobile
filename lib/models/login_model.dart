@@ -25,6 +25,7 @@ class UserData {
   final String jenisKelamin;
   final String alamat;
   final String noTelepon;
+  final String foto;
   final String username;
 
   UserData({
@@ -33,6 +34,7 @@ class UserData {
     required this.jenisKelamin,
     required this.alamat,
     required this.noTelepon,
+    required this.foto,
     required this.username,
   });
 
@@ -43,6 +45,7 @@ class UserData {
       jenisKelamin: json['jenis_kelamin'],
       alamat: json['alamat'],
       noTelepon: json['no_telepon'],
+      foto: json['foto'],
       username: json['username'],
     );
   }
@@ -54,6 +57,7 @@ class UserData {
       'jenis_kelamin': jenisKelamin,
       'alamat': alamat,
       'no_telepon': noTelepon,
+      'foto': foto,
       'username': username,
     };
   }

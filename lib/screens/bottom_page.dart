@@ -8,7 +8,9 @@ import 'add_adoption_page.dart';
 import '../configs/constant.dart';
 
 class BottomPage extends StatefulWidget {
-  const BottomPage({super.key});
+  final int initialTabIndex;
+
+  const BottomPage({super.key, required this.initialTabIndex});
 
   @override
   State<BottomPage> createState() => _BottomPageState();
@@ -23,6 +25,12 @@ class _BottomPageState extends State<BottomPage> {
     AdoptionPage(),
     UserPage(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialTabIndex;
+  }
 
   void _onItemTapped(int index) {
     setState(() {

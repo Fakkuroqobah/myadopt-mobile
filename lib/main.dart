@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import 'providers/adopsi_provider.dart';
 import 'providers/hewan_provider.dart';
 import 'providers/loading_provider.dart';
 
@@ -20,6 +21,7 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider<LoadingProvider>(
             create: (_) => LoadingProvider()),
         ChangeNotifierProvider<HewanProvider>(create: (_) => HewanProvider()),
+        ChangeNotifierProvider<AdopsiProvider>(create: (_) => AdopsiProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
