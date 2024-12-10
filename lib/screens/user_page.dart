@@ -70,6 +70,7 @@ class _UserPageState extends State<UserPage> {
     return Scaffold(
         backgroundColor: Constant.colorPrimary,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           centerTitle: true,
           backgroundColor: Colors.white,
           title: const Text('Profil'),

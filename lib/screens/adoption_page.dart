@@ -34,9 +34,9 @@ class _AdoptionPageState extends State<AdoptionPage> {
     return Scaffold(
       backgroundColor: Constant.colorPrimary,
       appBar: AppBar(
-        title: const Text('Adopsi'),
-        centerTitle: true,
-      ),
+          title: const Text('Adopsi'),
+          automaticallyImplyLeading: false,
+          centerTitle: true),
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: _refresh,

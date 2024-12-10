@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
+import 'donation_page.dart';
 import 'home_page.dart';
 import 'user_page.dart';
 import 'adoption_page.dart';
-import 'add_adoption_page.dart';
 import '../configs/constant.dart';
 
 class BottomPage extends StatefulWidget {
@@ -18,10 +18,14 @@ class BottomPage extends StatefulWidget {
 
 class _BottomPageState extends State<BottomPage> {
   int _selectedIndex = 0;
+  final List<GlobalKey<NavigatorState>> _navigatorKeys = List.generate(
+    4,
+    (index) => GlobalKey<NavigatorState>(),
+  );
 
   static const List<Widget> _pages = <Widget>[
     HomePage(),
-    AddAdoptionPage(),
+    DonationPage(),
     AdoptionPage(),
     UserPage(),
   ];
@@ -33,9 +37,19 @@ class _BottomPageState extends State<BottomPage> {
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (_selectedIndex == index) {
+      // Jika tab yang aktif di klik lagi
+      if (_navigatorKeys[index].currentState != null) {
+        _navigatorKeys[index]
+            .currentState!
+            .popUntil((route) => route.isFirst); // Refresh halaman
+      }
+    } else {
+      // Pindah ke tab lain
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override
