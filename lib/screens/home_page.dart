@@ -16,11 +16,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<HewanProvider>(context, listen: false).getData();
+    });
+
+    _searchController.addListener(() {
+      final query = _searchController.text;
+      Provider.of<HewanProvider>(context, listen: false).search(query);
     });
 
     _loadUser();
@@ -81,6 +88,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   child: TextField(
+                    controller: _searchController,
                     decoration: InputDecoration(
                       contentPadding:
                           const EdgeInsets.symmetric(horizontal: 20),
@@ -223,41 +231,47 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildCardKategori(String imagePath, String text) {
     return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: const Offset(1, 1),
-            ),
-          ],
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-                child: Image.asset(
-                  imagePath,
-                  fit: BoxFit.fill,
-                  height: 30,
+      child: GestureDetector(
+        onTap: () {
+          Provider.of<HewanProvider>(context, listen: false)
+              .filterByKategori(text);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(1, 1),
+              ),
+            ],
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+                  child: Image.asset(
+                    imagePath,
+                    fit: BoxFit.fill,
+                    height: 30,
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 20.0),
-              child: Text(
-                text,
-                style: const TextStyle(fontSize: 16.0),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0, right: 20.0),
+                child: Text(
+                  text,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
