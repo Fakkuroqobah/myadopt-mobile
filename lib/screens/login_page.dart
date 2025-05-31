@@ -117,11 +117,12 @@ class _LoginPageState extends State<LoginPage> {
 
                         _loginService.login(username, password).then((value) {
                           loadingProvider.setLoading(false);
-                          Navigator.pushReplacement(
+                          Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      const BottomPage(initialTabIndex: 0)));
+                                      const BottomPage(initialTabIndex: 0)),
+                              (Route<dynamic> route) => false);
                         }).catchError((err) {
                           loadingProvider.setLoading(false);
                           final snackBar = SnackBar(
