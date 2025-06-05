@@ -27,9 +27,9 @@ class AjukanAdopsiService {
       "hobi": hobi,
       "alamat": alamat,
       "penghasilan": penghasilan,
-      "ktp": MultipartFile.fromBytes(fotoByte,
-          filename: "image.$fotoExtension",
-          contentType: MediaType('image', fotoExtension))
+      // "ktp": MultipartFile.fromBytes(fotoByte,
+      //     filename: "image.$fotoExtension",
+      //     contentType: MediaType('image', fotoExtension))
     });
 
     try {

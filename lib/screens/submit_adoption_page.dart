@@ -156,23 +156,23 @@ class _SubmitAdoptionPageState extends State<SubmitAdoptionPage> {
                     }
                     return null;
                   }),
-              const SizedBox(height: 12.0),
-              const Text('Upload KTP',
-                  style: TextStyle(fontWeight: FontWeight.w500)),
-              const SizedBox(height: 8.0),
-              GestureDetector(
-                onTap: _pickImage,
-                child: Container(
-                  height: 150,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.grey[200]),
-                  child: _image == null
-                      ? Icon(Iconsax.image, color: Colors.grey[800])
-                      : Image.file(_image!, fit: BoxFit.cover),
-                ),
-              ),
+              // const SizedBox(height: 12.0),
+              // const Text('Upload KTP',
+              //     style: TextStyle(fontWeight: FontWeight.w500)),
+              // const SizedBox(height: 8.0),
+              // GestureDetector(
+              //   onTap: _pickImage,
+              //   child: Container(
+              //     height: 150,
+              //     width: double.infinity,
+              //     decoration: BoxDecoration(
+              //         borderRadius: BorderRadius.circular(15),
+              //         color: Colors.grey[200]),
+              //     child: _image == null
+              //         ? Icon(Iconsax.image, color: Colors.grey[800])
+              //         : Image.file(_image!, fit: BoxFit.cover),
+              //   ),
+              // ),
               const SizedBox(height: 12.0),
               const Text('Penghasilan',
                   style: TextStyle(fontWeight: FontWeight.w500)),
